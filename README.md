@@ -6,11 +6,11 @@ This project is a scrollytelling data visualization created for the ASU CSE 578 
 
 The visualization transforms complex data points—such as manufacturing emissions, operational efficiency, and grid carbon intensity—into an engaging, narrative-driven experience.
 
-📊 Visualization Concept (Scrollytelling)
+Visualization Concept (Scrollytelling)
 
 The core visualization uses a comparative scale where two icons (one representing EV and one representing ICE) move along a normalized vertical scale. As the user scrolls through the narrative sections, the icons move to new positions, visually illustrating which vehicle performs "better" or "worse" for the metric currently being discussed (e.g., higher battery production cost vs. lower operational emissions).
 
-🛠️ Technology Stack
+Technology Stack
 
 HTML/CSS: For structure and styling (using Tailwind CSS for utility classes).
 
@@ -20,7 +20,7 @@ D3.js (Data-Driven Documents): Used for creating and animating the scalable vect
 
 Intersection Observer API: Used to detect when a narrative section enters the viewport, triggering the D3 visualization update.
 
-🤝 Team and Subgroups
+Team and Subgroups
 
 This project was developed by two subgroups to ensure a comprehensive, dual-perspective analysis:
 
