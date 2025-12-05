@@ -1,0 +1,204 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap");
+
+body {
+  font-family: "Inter", sans-serif;
+}
+
+/* ROOT WRAPPER */
+.road-sequence {
+  position: relative;
+  padding-top: 140px;
+  padding-bottom: 40vh;
+  /* room for fade-out */
+}
+
+/* FIXED CENTER ROAD AREA */
+#road-strip {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28vw;
+  min-width: 250px;
+  max-width: 420px;
+  height: 100vh;
+
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+
+  transition: opacity 0.4s ease-out;
+}
+
+/* ROAD SURFACE STYLING */
+.road-surface {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+/* LEFT HALF GRID (EV SIDE) */
+.ev-grid {
+  position: absolute;
+  left: 0;
+  width: 50%;
+  height: 100%;
+
+  background-image:
+    linear-gradient(#4ef1b8 1px, transparent 1px),
+    linear-gradient(90deg, #4ef1b8 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity: 0.22;
+}
+
+/* RIGHT HALF ASPHALT (ICE SIDE) */
+.ice-asphalt {
+  position: absolute;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  background: repeating-linear-gradient(0deg,
+      rgba(90, 90, 90, 0.33) 0 3px,
+      transparent 3px 6px);
+  opacity: 0.27;
+}
+
+/* CENTER DASHED LINE */
+.center-line {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 100%;
+  background: repeating-linear-gradient(white 0 18px,
+      transparent 18px 32px);
+}
+
+/* CARS */
+.car-img {
+  position: absolute;
+  height: 170px;
+  /* updated for visibility + matching reference scale */
+  width: auto;
+  bottom: 12%;
+  transform-origin: center bottom;
+}
+
+/* EV position */
+.car-ev {
+  left: 18%;
+  transform: translateX(-50%);
+}
+
+/* ICE position */
+.car-ice {
+  left: 68%;
+  transform: translateX(-50%);
+}
+
+/* VAPORS */
+.vapor {
+  position: absolute;
+  bottom: 8%;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.9), transparent);
+  filter: blur(12px);
+  opacity: 0.25;
+}
+
+.vapor-ev {
+  left: 18%;
+  transform: translateX(-50%);
+}
+
+.vapor-ice {
+  left: 68%;
+  transform: translateX(-50%);
+}
+
+/* PANELS AREA */
+.road-panels {
+  position: relative;
+  z-index: 2;
+}
+
+/* EACH PANEL SECTION */
+.road-panel {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 4rem 0;
+}
+
+/* GRID TO CREATE LEFT • CENTER • RIGHT */
+.panel-grid {
+  display: grid;
+  grid-template-columns: 6fr 28vw 6fr;
+  /* matches road width alignment */
+  gap: 4rem;
+  width: 100%;
+  align-items: center;
+  padding: 0 6vw;
+}
+
+/* LEFT + RIGHT PANELS */
+.panel-left,
+.panel-right {
+  padding: 1rem 1.5rem;
+  max-width: 750px;
+  color: white;
+}
+
+/* CENTER COLUMN IS EMPTY BUT HOLDS ROAD GAP */
+.panel-center {
+  pointer-events: none;
+}
+
+/* HEADINGS */
+.panel-left h3,
+.panel-right h3 {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 1.2rem;
+}
+
+/* PARAGRAPHS */
+.panel-left p,
+.panel-right p {
+  font-size: 1.25rem;
+  opacity: 0.92;
+  line-height: 1.65;
+  margin-bottom: 1.4rem;
+}
+
+/* MOBILE BEHAVIOR */
+@media (max-width: 900px) {
+  #road-strip {
+    display: none;
+  }
+
+  .panel-grid {
+    grid-template-columns: 1fr;
+    padding: 0 1.5rem;
+    gap: 2.5rem;
+  }
+
+  .panel-center {
+    display: none;
+  }
+
+  .panel-left h3,
+  .panel-right h3 {
+    font-size: 2.2rem;
+  }
+
+  .panel-left p,
+  .panel-right p {
+    font-size: 1.1rem;
+  }
+}
