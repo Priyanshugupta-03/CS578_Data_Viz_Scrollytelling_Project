@@ -4,12 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EV vs ICE Environmental Trade-Offs (Comparative View)</title>
-    <!-- Load Tailwind CSS for utility styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load D3.js library -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
     
-    <!-- Custom Styles -->
     <style>
         /* Import Inter font for modern look */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
@@ -31,70 +28,70 @@
         </div>
     </header>
 
-    <!-- NEW LAYOUT: The graphic container is now fixed/sticky in the background. -->
-    <div id="scrolly-main-container">
+    <div id="scrolly-main-container" class="lg:grid lg:grid-cols-2">
         
-        <!-- Background/Sticky Graphic Column -->
-        <!-- This column is now FULL WIDTH and positioned FIXED/STICKY -->
-        <div id="graphic-col" class="is-hidden">
-            <!-- D3 SVG will be appended here -->
-            <div id="graphic" class="w-full h-full">
-            </div>
-        </div>
-
-        <!-- Foreground Narrative Sections (Scrollable) -->
-        <!-- This column is now FULL HEIGHT/WIDTH but contains the narrative blocks. -->
-        <div id="sections-col" class="w-full">
+        <div id="sections-col" class="w-full lg:col-span-1 lg:order-1 relative z-15">
             <div class="story-sections">
                 
-                <!-- BALANCED STORY -->
                 <div id="balanced-story" style="display: none;">
+                    
                     <div class="step" data-step="0">
-                        <div class="p-6 rounded-xl border-2 border-transparent bg-gray-800/80 backdrop-blur-sm shadow-2xl text-gray-200">
+                        <div class="panel-inner center-text"> 
                             <h3 class="text-xl font-semibold mb-2 text-green-500">Step 0: The Full Picture</h3>
                             <p>Most studies conclude that Electric Vehicles (EVs) are the long-term winner. However, this relies on a clean power grid. We compare the lifecycle impact of an EV against a modern Internal Combustion Engine (ICE) car.</p>
                             <p class="mt-4 font-semibold text-lg text-green-500">Scroll down to explore the journey.</p>
                         </div>
                     </div>
-
+                    
                     <div class="step" data-step="1">
-                        <div class="p-6 rounded-xl border-2 border-transparent bg-gray-800/80 backdrop-blur-sm shadow-2xl border-gray-600 text-gray-200">
-                            <h3 class="text-xl font-semibold mb-2 text-white">Step 1: Manufacturing Emissions</h3>
-                            <p>The manufacturing of the EV's battery creates a significant initial environmental "debt." The ICE vehicle starts with a much smaller footprint.</p>
-                            <p class="mt-4">This cost is measured in resource extraction (mining) and high-energy factory processes.</p>
+                        <div class="panel-inner">
+                            <div class="ev-text p-6 text-gray-200">
+                                <h3 class="text-xl font-semibold mb-2 text-white">EV Lane: Manufacturing Debt</h3>
+                                <p>The manufacturing of the EV's battery creates a significant initial environmental "debt." This cost is measured in resource extraction (mining) and high-energy factory processes.</p>
+                            </div>
+                            <div></div> 
+                            <div class="ice-text p-6 text-gray-200">
+                                <h3 class="text-xl font-semibold mb-2 text-white">ICE Lane: Lower Starting Footprint</h3>
+                                <p>The ICE vehicle starts with a much smaller initial footprint. Its major impact comes later, during the use phase.</p>
+                            </div>
                         </div>
                     </div>
 
                     <div class="step" data-step="2">
-                        <div class="p-6 rounded-xl border-2 border-transparent bg-gray-800/80 backdrop-blur-sm shadow-2xl border-gray-600 text-gray-200">
-                            <h3 class="text-xl font-semibold mb-2 text-white">Step 2: Use Phase (Clean Grid)</h3>
-                            <p>When the EV is powered by a renewable or clean grid (like solar, wind, or nuclear), its ongoing emissions are nearly zero. The ICE continues to pollute with every mile.</p>
-                            <p class="mt-4 font-semibold text-lg text-green-500">The EV quickly pays off its initial debt in this scenario.</p>
+                        <div class="panel-inner">
+                            <div class="ev-text p-6 text-gray-200">
+                                <h3 class="text-xl font-semibold mb-2 text-white">EV Lane: Use Phase (Clean Grid)</h3>
+                                <p>When the EV is powered by a renewable or clean grid (like solar, wind, or nuclear), its ongoing emissions are nearly zero. The EV quickly pays off its initial debt in this scenario.</p>
+                            </div>
+                            <div></div>
+                            <div class="ice-text p-6 text-gray-200">
+                                <h3 class="text-xl font-semibold mb-2 text-white">ICE Lane: Continuous Pollution</h3>
+                                <p>The ICE continues to pollute with every mile, emitting CO2, NOx, and particulate matter regardless of the clean grid transition.</p>
+                            </div>
                         </div>
                     </div>
 
                     <div class="step" data-step="3">
-                        <div class="p-6 rounded-xl border-2 border-transparent bg-gray-800/80 backdrop-blur-sm shadow-2xl border-gray-600 text-gray-200">
+                        <div class="panel-inner center-text">
                             <h3 class="text-xl font-semibold mb-2 text-white">Step 3: End of Life Potential</h3>
                             <p>With aggressive battery recycling, the resources used in the EV (lithium, cobalt, nickel) are reclaimed, which dramatically lowers the lifecycle cost of future EVs. The ICE car offers no such circular economy benefit.</p>
                         </div>
                     </div>
 
                     <div class="step" data-step="4">
-                        <div class="p-6 rounded-xl border-2 border-transparent bg-gray-800/80 backdrop-blur-sm shadow-2xl border-gray-600 text-gray-200">
+                        <div class="panel-inner center-text">
                             <h3 class="text-xl font-semibold mb-2 text-white">Step 4: Final Balance (EV Wins)</h3>
                             <p>On a clean grid, the EV's lower use-phase emissions outweigh the initial manufacturing cost. The long-term environmental advantage is clear.</p>
                             <p class="mt-4 font-semibold text-lg text-green-500">Conclusion: The initial cost is worth the long-term, low-emission operation.</p>
                         </div>
                     </div>
-
                 </div>
                 
                 
-                <!-- CRITICAL STORY -->
                 <div id="critical-story" style="display: block;">
+                    
                     <div class="step" data-step="0">
-                        <div class="p-6 rounded-xl border-2 border-transparent bg-gray-800/80 backdrop-blur-sm shadow-2xl text-gray-200">
+                        <div class="panel-inner center-text">
                             <h3 class="text-xl font-semibold mb-2 text-red-500">Step 0: The Power Grid Problem</h3>
                             <p>The EV's biggest environmental weakness is its reliance on the power source. If an EV is charged using a 'dirty grid' (coal/gas-heavy), the pollution is simply moved from the tailpipe to the power plant.</p>
                             <p class="mt-4 font-semibold text-lg text-red-500">Scroll down to see the trade-offs.</p>
@@ -102,30 +99,43 @@
                     </div>
 
                     <div class="step" data-step="1">
-                        <div class="p-6 rounded-xl border-2 border-transparent bg-gray-800/80 backdrop-blur-sm shadow-2xl border-gray-600 text-gray-200">
-                            <h3 class="text-xl font-semibold mb-2 text-white">Step 1: Manufacturing Emissions</h3>
-                            <p>The manufacturing process for the EV battery, which requires mining and heavy industry, still gives the EV a higher starting environmental footprint than the ICE car.</p>
-                            <p class="mt-4">This initial debt must still be overcome through clean use.</p>
+                         <div class="panel-inner">
+                            <div class="ev-text p-6 text-gray-200">
+                                <h3 class="text-xl font-semibold mb-2 text-white">EV Lane: Manufacturing Debt</h3>
+                                <p>The manufacturing process for the EV battery, which requires mining and heavy industry, still gives the EV a higher starting environmental footprint than the ICE car.</p>
+                                <p class="mt-4">This initial debt must still be overcome through clean use.</p>
+                            </div>
+                            <div></div>
+                            <div class="ice-text p-6 text-gray-200">
+                                <h3 class="text-xl font-semibold mb-2 text-white">ICE Lane: Initial Advantage</h3>
+                                <p>The ICE's lower upfront emissions means the EV has a higher bar to clear to achieve a net benefit over its lifetime.</p>
+                            </div>
                         </div>
                     </div>
 
                     <div class="step" data-step="2">
-                        <div class="p-6 rounded-xl border-2 border-transparent bg-gray-800/80 backdrop-blur-sm shadow-2xl border-gray-600 text-gray-200">
-                            <h3 class="text-xl font-semibold mb-2 text-white">Step 2: Use Phase (Dirty Grid)</h3>
-                            <p>When the EV is powered by a dirty grid, its effective emissions remain high. In fact, for an efficient ICE car, the EV's total emissions (factory + charging) can be higher over the vehicle's lifespan.</p>
-                            <p class="mt-4 font-semibold text-lg text-red-500">The shift in pollution location negates the benefit.</p>
+                        <div class="panel-inner">
+                            <div class="ev-text p-6 text-gray-200">
+                                <h3 class="text-xl font-semibold mb-2 text-white">EV Lane: Use Phase (Dirty Grid)</h3>
+                                <p>When the EV is powered by a dirty grid, its effective emissions remain high. The battery is still the single largest environmental cost factor.</p>
+                            </div>
+                            <div></div> 
+                            <div class="ice-text p-6 text-gray-200">
+                                <h3 class="text-xl font-semibold mb-2 text-white">ICE Lane: The Break-Even Point</h3>
+                                <p>For an efficient ICE car, the EV's total emissions (factory + charging) can be higher over the vehicle's lifespan. The shift in pollution location negates the benefit.</p>
+                            </div>
                         </div>
                     </div>
 
                     <div class="step" data-step="3">
-                        <div class="p-6 rounded-xl border-2 border-transparent bg-gray-800/80 backdrop-blur-sm shadow-2xl border-gray-600 text-gray-200">
+                         <div class="panel-inner center-text">
                             <h3 class="text-xl font-semibold mb-2 text-white">Step 3: Recycling/Disposal Issues</h3>
                             <p>Without sufficient recycling infrastructure, the battery becomes a major disposal burden. This adds to the EV's overall environmental cost, while the ICE vehicle's disposal is more standardized.</p>
                         </div>
                     </div>
 
                     <div class="step" data-step="4">
-                        <div class="p-6 rounded-xl border-2 border-transparent bg-gray-800/80 backdrop-blur-sm shadow-2xl border-gray-600 text-gray-200">
+                        <div class="panel-inner center-text">
                             <h3 class="text-xl font-semibold mb-2 text-white">Step 4: Final Balance</h3>
                             <p>When factoring in high manufacturing impact and high charging emissions, the EV may fail to achieve any substantial environmental benefit over the ICE.</p>
                             <p class="mt-4 font-semibold text-lg text-red-500">Consider the full lifecycle, not just the tailpipe.</p>
@@ -133,11 +143,15 @@
                     </div>
                 </div>
 
-                <!-- Sentinel Step to hide visualization after the end (data-step="5") -->
                 <div class="step is-sentinel h-[90vh]" data-step="5">
                     <h2 class="opacity-0 h-0 p-0 m-0">Post-Scroll Spacer</h2>
                     <p class="opacity-0">Scroll finished. The graphic will disappear.</p>
                 </div>
+            </div>
+        </div>
+
+        <div id="graphic-col" class="is-hidden lg:col-span-1 lg:order-2">
+            <div id="graphic" class="w-full h-full">
             </div>
         </div>
     </div>
@@ -146,7 +160,6 @@
         Data Visualization Project based on EPA, IEA, and Our World in Data concepts.
     </footer>
 
-    <!-- Link the external JavaScript file -->
     <script src="Scrollytelling.js"></script>
 </body>
 </html>
