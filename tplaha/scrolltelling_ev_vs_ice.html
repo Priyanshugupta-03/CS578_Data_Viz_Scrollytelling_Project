@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Charging Ahead or Burning Out — EV vs ICE Scrollytelling</title>
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:#050008;
+  color:#f8f6ff;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  overflow-x:hidden;
+}
+
+/* =======================================
+   BACKGROUND
+======================================= */
+#bg-gradient{
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle at 50% -10%, #402066, #140016 55%, #050008 100%);
+  z-index:-3;
+}
+#horizon{
+  position:fixed;
+  top:45%; left:0; right:0;
+  height:1px;
+  background:rgba(255,255,255,0.25);
+  z-index:-2;
+}
+
+/* =======================================
+   CONTINUOUS ROAD STRIP (RW2 = 50% width)
+   Appears only during the "road zone".
+======================================= */
+#road-strip{
+  position:fixed;
+  top:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:50vw;              /* RW2 */
+  height:100vh;
+  pointer-events:none;
+  opacity:0;               /* hidden until road zone */
+  z-index:-1;              /* behind text, above bg */
+  transition:opacity 0.5s ease;
+}
+
+#road{
+  position:relative;
+  width:100%;
+  height:100%;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,0.06) 0, transparent 65%),
+    repeating-linear-gradient(
+      to right,
+      rgba(255,255,255,0.06) 0 1px,
+      rgba(0,0,0,0.9) 1px 10px
+    );
+  background-color:#1a1a1a;
+  border-left:5px solid #ffffff;
+  border-right:5px solid #ffffff;
+}
+
+/* full-height dashed center line */
+#center-dash{
+  position:absolute;
+  top:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:10px;
+  height:100%;
+  background:repeating-linear-gradient(
+    to bottom,
+    #ffffff 0 24px,
+    transparent 24px 48px
+  );
+}
+
+/* cars and shadows on the one continuous road */
+.car{
+  position:absolute;
+  width:120px;
+  bottom:4vh;
+  transform:translateX(-50%);
+  filter:drop-shadow(0 0 12px rgba(0,0,0,0.7));
+}
+#evcar{ left:32%; }
+#icecar{ left:68%; }
+
+.car-shadow{
+  position:absolute;
+  width:140px;
+  height:35px;
+  border-radius:50%;
+  background:rgba(0,0,0,0.85);
+  filter:blur(10px);
+  bottom:2vh;
+}
+#ev-shadow{ left:32%; transform:translateX(-50%); }
+#ice-shadow{ left:68%; transform:translateX(-50%); }
+
+/* =======================================
+   GENERIC LAYOUT / TYPE
+======================================= */
+section.panel{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:7vh 8vw;
+}
+.panel-inner{
+  width:100%;
+  max-width:1100px;
+}
+
+/* Intro centered */
+#intro .panel-inner{
+  max-width:900px;
+  text-align:center;
+}
+
+h1{
+  font-size:3.1rem;
+  line-height:1.1;
+}
+h2{
+  font-size:1.6rem;
+  margin-top:0.75rem;
+  color:#f2ddff;
+}
+p{
+  font-size:1.05rem;
+  line-height:1.6;
+  margin-top:1.1rem;
+  color:#f0ebff;
+}
+strong{color:#ffe17c;}
+
+#scroll-indicator{
+  margin-top:2.6rem;
+  font-size:0.98rem;
+  opacity:0.76;
+}
+
+/* =======================================
+   ROAD-ZONE PANELS (EV / CENTER / ICE)
+   3-column grid: [EV text] [road zone] [ICE text]
+   Road itself is fixed behind; middle column is just spacing.
+======================================= */
+.story-panel{
+  display:grid;
+  grid-template-columns: 1fr 50vw 1fr;  /* 3 columns: EV | ROAD | ICE */
+  column-gap:2vw;
+  align-items:flex-start;
+}
+
+/* EV text always in column 1 (left) */
+.ev-text{
+  grid-column:1 / 2;
+  max-width:420px;
+  text-align:left;
+}
+
+/* ICE text always in column 3 (right) */
+.ice-text{
+  grid-column:3 / 4;
+  max-width:420px;
+  text-align:right;
+}
+
+/* center text uses both sides but keeps road center */
+.center-text{
+  grid-column:1 / 4;
+  max-width:780px;
+  margin:0 auto;
+  text-align:center;
+}
+
+/* labels & headings */
+.section-label{
+  text-transform:uppercase;
+  letter-spacing:0.2em;
+  font-size:0.8rem;
+  opacity:0.65;
+  margin-bottom:0.7rem;
+}
+h3{
+  font-size:1.3rem;
+  margin-top:1.1rem;
+}
+
+/* bullets */
+ul{
+  margin-top:0.9rem;
+  padding-left:1.2rem;
+}
+.ice-text ul{
+  padding-left:0;
+  padding-right:1.2rem;
+  list-style-position:inside;
+}
+ul li{
+  margin-bottom:0.45rem;
+  font-size:0.98rem;
+}
+
+.vis-note{
+  margin-top:1rem;
+  font-size:0.9rem;
+  opacity:0.82;
+  font-style:italic;
+}
+
+/* final */
+#final .panel-inner{
+  max-width:880px;
+  text-align:center;
+}
+
+/* responsive */
+@media (max-width:900px){
+  .story-panel{
+    grid-template-columns:1fr;
+  }
+  .ev-text,
+  .ice-text,
+  .center-text{
+    grid-column:1 / 2;
+    max-width:100%;
+    text-align:left;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="bg-gradient"></div>
+<div id="horizon"></div>
+
+<!-- ONE continuous road strip for the whole story zone -->
+<div id="road-strip">
+  <div id="road">
+    <div id="center-dash"></div>
+    <div id="ev-shadow" class="car-shadow"></div>
+    <div id="ice-shadow" class="car-shadow"></div>
+    <img id="evcar"  class="car" src="assets/car_ev_green.png" alt="EV car" />
+    <img id="icecar" class="car" src="assets/car_ice_red.png"   alt="ICE car" />
+  </div>
+</div>
+
+<main>
+
+<!-- ========== PAGE 1: INTRO (NO ROAD) ========== -->
+<section id="intro" class="panel">
+  <div class="panel-inner intro-animate">
+    <h1>Charging Ahead or Burning Out?</h1>
+    <h2>Visualizing the Environmental Trade-Offs Between EVs and ICEs</h2>
+
+    <p>
+      EVs and ICE vehicles share the same roads today but lead to very different environmental outcomes.
+      This scrollytelling page follows both lanes to ask: <strong>when are EVs clearly better, and where
+      do their hidden trade-offs show up?</strong>
+    </p>
+
+    <p>
+      As you scroll, a continuous road appears behind the content. The left side focuses on the EV lane,
+      while the right side focuses on the ICE lane and system-level constraints.
+    </p>
+
+    <p>
+      The aim is not to declare a simple winner, but to support <strong>evidence-based decisions</strong>
+      about sustainable transportation.
+    </p>
+
+    <div id="scroll-indicator">Scroll to begin ↓</div>
+  </div>
+</section>
+
+<!-- ========== PAGE 2: ROAD ZONE (EV → CENTER → ICE) ========== -->
+
+<!-- wrapper just to know when road should be visible -->
+<div id="road-zone">
+
+  <!-- Split intro -->
+  <section id="split" class="panel">
+    <div class="panel-inner">
+      <h1>The Road Splits</h1>
+      <p>
+        From here, the story divides into two main lanes. On the EV lane, we collect the strongest
+        pro-EV arguments and the data that backs them. On the ICE lane, we surface the constraints,
+        caveats, and uncomfortable questions that often get left out of optimistic narratives.
+      </p>
+    </div>
+  </section>
+
+  <!-- EV lane (pro EV) -->
+  <section id="ev-section" class="panel">
+    <div class="panel-inner story-panel">
+      <div class="ev-text">
+        <div class="section-label">EV Lane · Pro-EV Perspective</div>
+        <h1>Where EVs Shine</h1>
+
+        <p>
+          When the electricity mix is decarbonizing, EVs can significantly reduce climate and health
+          impacts compared with conventional ICE vehicles. Their efficiency and fuel flexibility make
+          them central to most net-zero transport scenarios.
+        </p>
+
+        <h3>Key Environmental Advantages</h3>
+        <ul>
+          <li><strong>Zero tailpipe exhaust:</strong> No on-road NOₓ, PM, or CO₂ emissions, improving urban air quality.</li>
+          <li><strong>High drivetrain efficiency:</strong> Electric motors can be 3–4× more efficient than ICE engines.</li>
+          <li><strong>Gets cleaner over time:</strong> As the grid adds more solar and wind, each kilometre driven emits less.</li>
+          <li><strong>Local co-benefits:</strong> Lower noise, heat, and smell in dense city streets.</li>
+        </ul>
+
+        <p class="vis-note">
+          Suggested visuals here: CO₂ emissions avoided vs ICE baseline, EV market share growth,
+          and fuel displacement (litres of gasoline/diesel avoided) for your chosen region.
+        </p>
+      </div>
+
+      <!-- middle column is just the road area; actual road is fixed behind -->
+      <div></div>
+
+      <div class="ice-text">
+        <!-- optional short EV supporting note or keep empty -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Center transition -->
+  <section id="center-section" class="panel">
+    <div class="panel-inner story-panel">
+      <div class="center-text">
+        <h1>Re-Centering the Road</h1>
+        <p>
+          The EV lane tells a compelling story: large emission reductions are possible if we clean up the grid
+          and deploy EVs widely. But the picture is incomplete. Before we move into the ICE lane, we pause here
+          in the center to ask: <strong>what are the system-level costs of scaling EVs?</strong>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ICE lane (trade-offs) -->
+  <section id="ice-section" class="panel">
+    <div class="panel-inner story-panel">
+      <div class="ev-text">
+        <!-- optional small ICE note on left or leave empty -->
+      </div>
+
+      <div></div>
+
+      <div class="ice-text">
+        <div class="section-label">ICE Lane · EV Trade-Offs & Constraints</div>
+        <h1>Where the EV Story Gets Harder</h1>
+
+        <p>
+          EVs are not impact-free. Their benefits depend heavily on how electricity is produced, how batteries
+          are mined and manufactured, and how charging is managed at scale. On this lane, we focus on the
+          pressures and risks that accompany rapid EV adoption.
+        </p>
+
+        <h3>Environmental & System-Level Concerns</h3>
+        <ul>
+          <li><strong>Battery production footprint:</strong> Mining and refining lithium, nickel, and cobalt
+              can be energy-intensive and socially disruptive if not strictly regulated.</li>
+          <li><strong>Grid demand and timing:</strong> Unmanaged EV charging can increase evening peaks and
+              require additional fossil generation capacity.</li>
+          <li><strong>Coal-heavy grids:</strong> In some regions, lifecycle CO₂ for EVs can approach that of
+              efficient hybrids or ICEs.</li>
+          <li><strong>End-of-life management:</strong> Reuse, second-life applications, and recycling systems
+              are still scaling and uneven across countries.</li>
+        </ul>
+
+        <p class="vis-note">
+          Suggested visuals here: additional electricity demand from EV charging, battery manufacturing
+          emissions, and EV vs ICE lifecycle emissions under different grid mixes.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</div> <!-- /road-zone -->
+
+<!-- ========== PAGE 3: FINAL (NO ROAD) ========== -->
+<section id="final" class="panel">
+  <div class="panel-inner">
+    <h1>Final Chapter: Charging Ahead, Carefully</h1>
+    <p>
+      The EV lane and ICE lane are not two separate realities; they are different ways of looking at the
+      same transition. EVs can make road transport dramatically cleaner, especially when paired with
+      aggressive grid decarbonization and responsible battery supply chains.
+    </p>
+    <p>
+      At the same time, the ICE lane reminds us that technology alone cannot solve structural problems
+      like fossil-heavy electricity, weak regulation, or inequitable access. EVs are a powerful tool,
+      but not a magic solution.
+    </p>
+    <p>
+      By scrolling through both lanes, you have seen how the answer to “Are EVs better?” depends on the
+      <strong>underlying systems</strong> they plug into. The real design question becomes:
+      <strong>What kind of energy and mobility system are we building around these vehicles?</strong>
+    </p>
+  </div>
+</section>
+
+</main>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+/* Intro text animation */
+gsap.from("#intro .panel-inner > *",{
+  y:30,
+  opacity:0,
+  duration:0.9,
+  ease:"power2.out",
+  stagger:0.12
+});
+
+/* Show road-strip only in the road-zone */
+ScrollTrigger.create({
+  trigger:"#road-zone",
+  start:"top center",
+  end:"bottom center",
+  onEnter: () => document.getElementById("road-strip").style.opacity = 1,
+  onEnterBack: () => document.getElementById("road-strip").style.opacity = 1,
+  onLeave: () => document.getElementById("road-strip").style.opacity = 0,
+  onLeaveBack: () => document.getElementById("road-strip").style.opacity = 0
+});
+
+/* Subtle EV focus in EV section */
+gsap.to("#evcar",{
+  scale:1.1,
+  opacity:1,
+  ease:"power2.out",
+  scrollTrigger:{
+    trigger:"#ev-section",
+    start:"top center",
+    end:"bottom center",
+    scrub:true
+  }
+});
+gsap.to("#ev-shadow",{
+  scale:1.05,
+  opacity:1,
+  ease:"power2.out",
+  scrollTrigger:{
+    trigger:"#ev-section",
+    start:"top center",
+    end:"bottom center",
+    scrub:true
+  }
+});
+gsap.to("#icecar",{
+  scale:0.95,
+  opacity:0.5,
+  ease:"power2.out",
+  scrollTrigger:{
+    trigger:"#ev-section",
+    start:"top center",
+    end:"bottom center",
+    scrub:true
+  }
+});
+gsap.to("#ice-shadow",{
+  scale:0.95,
+  opacity:0.4,
+  ease:"power2.out",
+  scrollTrigger:{
+    trigger:"#ev-section",
+    start:"top center",
+    end:"bottom center",
+    scrub:true
+  }
+});
+
+/* Reset both in center section */
+gsap.to(["#evcar","#icecar","#ev-shadow","#ice-shadow"],{
+  scale:1,
+  opacity:1,
+  ease:"power2.out",
+  scrollTrigger:{
+    trigger:"#center-section",
+    start:"top center",
+    end:"bottom center",
+    scrub:true
+  }
+});
+
+/* ICE focus in ICE section */
+gsap.to("#icecar",{
+  scale:1.1,
+  opacity:1,
+  ease:"power2.out",
+  scrollTrigger:{
+    trigger:"#ice-section",
+    start:"top center",
+    end:"bottom center",
+    scrub:true
+  }
+});
+gsap.to("#ice-shadow",{
+  scale:1.05,
+  opacity:1,
+  ease:"power2.out",
+  scrollTrigger:{
+    trigger:"#ice-section",
+    start:"top center",
+    end:"bottom center",
+    scrub:true
+  }
+});
+gsap.to("#evcar",{
+  scale:0.95,
+  opacity:0.5,
+  ease:"power2.out",
+  scrollTrigger:{
+    trigger:"#ice-section",
+    start:"top center",
+    end:"bottom center",
+    scrub:true
+  }
+});
+gsap.to("#ev-shadow",{
+  scale:0.95,
+  opacity:0.4,
+  ease:"power2.out",
+  scrollTrigger:{
+    trigger:"#ice-section",
+    start:"top center",
+    end:"bottom center",
+    scrub:true
+  }
+});
+
+/* Reset again in final section (since road fades out anyway) */
+gsap.to(["#evcar","#icecar","#ev-shadow","#ice-shadow"],{
+  scale:1,
+  opacity:1,
+  ease:"power2.out",
+  scrollTrigger:{
+    trigger:"#final",
+    start:"top bottom",
+    end:"top center",
+    scrub:true
+  }
+});
+</script>
+
+</body>
+</html>
