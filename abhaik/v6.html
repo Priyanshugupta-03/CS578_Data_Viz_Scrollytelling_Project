@@ -1,0 +1,108 @@
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<section id="viz-battery-shadow" style="padding:40px 0;">
+  <h2>Battery vs Engine: Manufacturing and Use-phase “Shadows”</h2>
+  <svg id="battery-shadow-chart" width="800" height="400"></svg>
+</section>
+<script>
+function initBatteryShadowChart() {
+  const svg = d3.select("#battery-shadow-chart");
+  const width = +svg.attr("width");
+  const height = +svg.attr("height");
+  const margin = { top: 20, right: 20, bottom: 20, left: 20 };
+  const innerWidth = width - margin.left - margin.right;
+  const innerHeight = height - margin.top - margin.bottom;
+
+  const g = svg.append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  const ev = { manuf: 10, use: 15 };
+  const ice = { manuf: 5, use: 30 };
+
+  // EV battery body
+  const evGroup = g.append("g")
+    .attr("transform", "translate(100,50)");
+
+  evGroup.append("rect")
+    .attr("x", 0).attr("y", 0)
+    .attr("width", 60).attr("height", 40)
+    .attr("fill", "#1FBF74")
+    .attr("stroke", "#333");
+
+  evGroup.append("text")
+    .attr("x", 30).attr("y", -10)
+    .attr("text-anchor", "middle")
+    .text("EV");
+
+  // ICE engine body
+  const iceGroup = g.append("g")
+    .attr("transform", "translate(100,200)");
+
+  iceGroup.append("rect")
+    .attr("x", 0).attr("y", 0)
+    .attr("width", 60).attr("height", 40)
+    .attr("fill", "#C0392B")
+    .attr("stroke", "#333");
+
+  iceGroup.append("text")
+    .attr("x", 30).attr("y", -10)
+    .attr("text-anchor", "middle")
+    .text("ICE");
+
+  // Shadows (start collapsed)
+  const evShadowVert = evGroup.append("rect")
+    .attr("x", 20).attr("y", 40)
+    .attr("width", 20).attr("height", 0)
+    .attr("fill", "#555").attr("opacity", 0.5);
+
+  const evShadowHoriz = evGroup.append("rect")
+    .attr("x", 60).attr("y", 15)
+    .attr("width", 0).attr("height", 10)
+    .attr("fill", "#777").attr("opacity", 0.5);
+
+  const iceShadowVert = iceGroup.append("rect")
+    .attr("x", 20).attr("y", 40)
+    .attr("width", 20).attr("height", 0)
+    .attr("fill", "#555").attr("opacity", 0.5);
+
+  const iceShadowHoriz = iceGroup.append("rect")
+    .attr("x", 60).attr("y", 15)
+    .attr("width", 0).attr("height", 10)
+    .attr("fill", "#777").attr("opacity", 0.5);
+
+  // Labels
+  g.append("text")
+    .attr("x", 220).attr("y", 100)
+    .text("Manufacturing shadow");
+  g.append("text")
+    .attr("x", 220).attr("y", 120)
+    .text("Use-phase shadow");
+
+  window._playBatteryShadow = () => {
+    evShadowVert.transition().duration(800)
+      .attr("height", ev.manuf * 5);
+    evShadowHoriz.transition().duration(800)
+      .attr("width", ev.use * 5);
+
+    iceShadowVert.transition().duration(800)
+      .attr("height", ice.manuf * 5);
+    iceShadowHoriz.transition().duration(800)
+      .attr("width", ice.use * 5);
+  };
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  initBatteryShadowChart();
+
+  const section = document.querySelector("#viz-battery-shadow");
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && window._playBatteryShadow) {
+        window._playBatteryShadow();
+        observer.unobserve(section);
+      }
+    });
+  }, { threshold: 0.4 });
+
+  observer.observe(section);
+});
+</script>

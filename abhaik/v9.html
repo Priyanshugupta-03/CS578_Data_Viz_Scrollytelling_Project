@@ -1,0 +1,86 @@
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<section id="viz-traffic" style="padding:40px 0;">
+  <h2>EV Climate Benefit – Traffic Light Indicator</h2>
+  <svg id="traffic-chart" width="700" height="200"></svg>
+</section>
+<script>
+function initTrafficChart() {
+  const svg = d3.select("#traffic-chart");
+  const width = +svg.attr("width");
+  const height = +svg.attr("height");
+  const margin = { top: 30, right: 20, bottom: 20, left: 20 };
+  const g = svg.append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  // 0–1 = EV lifecycle benefit
+  const regions = [
+    { name: "Norway", benefit: 0.9 },
+    { name: "Germany", benefit: 0.7 },
+    { name: "US", benefit: 0.5 },
+    { name: "India", benefit: 0.2 }
+  ];
+
+  const spacing = (width - margin.left - margin.right) / regions.length;
+
+  function colorForBenefit(b) {
+    if (b > 0.7) return "green";
+    if (b > 0.4) return "yellow";
+    return "red";
+  }
+
+  const group = g.selectAll(".tl-group")
+    .data(regions)
+    .enter().append("g")
+    .attr("class", "tl-group")
+    .attr("transform", (_, i) => `translate(${50 + i * spacing},0)`);
+
+  group.append("rect")
+    .attr("x", -20).attr("y", 0)
+    .attr("width", 40).attr("height", 100)
+    .attr("rx", 20).attr("ry", 20)
+    .attr("fill", "#333");
+
+  const lights = ["red", "yellow", "green"];
+  lights.forEach((col, idx) => {
+    group.append("circle")
+      .attr("cx", 0)
+      .attr("cy", 20 + idx * 30)
+      .attr("r", 10)
+      .attr("fill", "#555")
+      .attr("class", col + "-light");
+  });
+
+  group.append("text")
+    .attr("y", 130)
+    .attr("text-anchor", "middle")
+    .text(d => d.name);
+
+  window._playTraffic = () => {
+    group.each(function(d) {
+      const gEl = d3.select(this);
+      const c = colorForBenefit(d.benefit);
+      gEl.selectAll("circle").transition().duration(400).attr("fill", "#555");
+      gEl.select("." + c + "-light")
+        .transition()
+        .duration(600)
+        .attr("fill", c);
+    });
+  };
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  initTrafficChart();
+
+  const section = document.querySelector("#viz-traffic");
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && window._playTraffic) {
+        window._playTraffic();
+        observer.unobserve(section);
+      }
+    });
+  }, { threshold: 0.4 });
+
+  observer.observe(section);
+});
+</script>

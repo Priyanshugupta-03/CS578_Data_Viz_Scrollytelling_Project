@@ -1,0 +1,91 @@
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<section id="viz-thermo" style="padding:40px 0;">
+  <h2>Emissions Thermometer: EV vs ICE</h2>
+  <svg id="thermo-chart" width="400" height="400"></svg>
+</section>
+<script>
+function initThermoChart() {
+  const svg = d3.select("#thermo-chart");
+  const width = +svg.attr("width");
+  const height = +svg.attr("height");
+  const g = svg.append("g")
+    .attr("transform", "translate(60,40)");
+
+  const maxVal = 100;
+  const evVal = 40;
+  const iceVal = 90;
+
+  const y = d3.scaleLinear()
+    .domain([0, maxVal])
+    .range([300, 0]);
+
+  // EV thermometer outline
+  g.append("rect")
+    .attr("x", 40).attr("y", 0)
+    .attr("width", 40).attr("height", 300)
+    .attr("fill", "none")
+    .attr("stroke", "#333");
+
+  // ICE thermometer outline
+  g.append("rect")
+    .attr("x", 160).attr("y", 0)
+    .attr("width", 40).attr("height", 300)
+    .attr("fill", "none")
+    .attr("stroke", "#333");
+
+  const evFill = g.append("rect")
+    .attr("x", 40).attr("width", 40)
+    .attr("y", y(0))
+    .attr("height", 300 - y(0))
+    .attr("fill", "#1FBF74");
+
+  const iceFill = g.append("rect")
+    .attr("x", 160).attr("width", 40)
+    .attr("y", y(0))
+    .attr("height", 300 - y(0))
+    .attr("fill", "#C0392B");
+
+  const evLabel = g.append("text")
+    .attr("x", 60).attr("y", 320)
+    .attr("text-anchor", "middle")
+    .text("EV");
+
+  const iceLabel = g.append("text")
+    .attr("x", 180).attr("y", 320)
+    .attr("text-anchor", "middle")
+    .text("ICE");
+
+  const yAxis = d3.axisLeft(y).ticks(5);
+  g.append("g").attr("transform", "translate(20,0)").call(yAxis);
+
+  g.append("text")
+    .attr("x", 0).attr("y", -10)
+    .text("Lifecycle emissions (relative)");
+
+  window._playThermo = () => {
+    evFill.transition().duration(800)
+      .attr("y", y(evVal))
+      .attr("height", 300 - y(evVal));
+
+    iceFill.transition().duration(800)
+      .attr("y", y(iceVal))
+      .attr("height", 300 - y(iceVal));
+  };
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  initThermoChart();
+
+  const section = document.querySelector("#viz-thermo");
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && window._playThermo) {
+        window._playThermo();
+        observer.unobserve(section);
+      }
+    });
+  }, { threshold: 0.4 });
+
+  observer.observe(section);
+});
+</script>
