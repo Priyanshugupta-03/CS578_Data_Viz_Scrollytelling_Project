@@ -1,0 +1,84 @@
+/* BASE STYLES - DARK THEME */
+body {
+    background-color: #111827; /* Tailwind gray-900 */
+    font-family: 'Inter', sans-serif;
+    color: #f3f4f6; /* Light gray text */
+}
+
+/* Right Column: Sticky Graphic (Visualization) */
+#graphic-col {
+    width: 100%; 
+    position: sticky;
+    top: 0; /* Stays stuck to the top of the viewport */
+    height: 100vh; /* Takes up full viewport height to contain the graphic */
+    background-color: #1f2937; /* Tailwind gray-800 */
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s ease-in-out; 
+    z-index: 15; 
+}
+
+/* Class to hide the graphic */
+#graphic-col.is-hidden {
+    opacity: 0;
+    pointer-events: none; 
+}
+
+/* Steps - ensure they take up enough space to trigger scroll events */
+.step {
+    min-height: 90vh; 
+    display: flex;
+    align-items: center;
+    transition: all 0.3s;
+}
+
+/* Active Step Styling */
+.step.is-active .p-6 {
+    /* Subtle change to indicate active step in the dark theme */
+    box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.5), 0 4px 6px -2px rgba(239, 68, 68, 0.2);
+    border-color: #ef4444; /* Red border highlight */
+    transform: scale(1.01);
+}
+
+/* Button Active State for View Toggle */
+#balanced-btn.is-active-view, #critical-btn.is-active-view {
+    transform: scale(1.05);
+    opacity: 1;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+#balanced-btn:not(.is-active-view) {
+    opacity: 0.8;
+}
+
+#critical-btn:not(.is-active-view) {
+    opacity: 0.8;
+}
+
+/* D3 Radial Bar Chart Styles */
+.radial-bar {
+    transition: all 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth, dramatic transition */
+    stroke-linecap: round;
+}
+
+.radial-label {
+    font-size: 16px;
+    font-weight: 600;
+    fill: #f3f4f6; /* White text for dark background */
+}
+
+.impact-center-text {
+    font-size: 3rem;
+    font-weight: 800;
+    fill: #f3f4f6;
+    text-anchor: middle;
+}
+
+.impact-unit-text {
+    font-size: 1.25rem;
+    font-weight: 500;
+    fill: #9ca3af; /* Gray text */
+    text-anchor: middle;
+}
