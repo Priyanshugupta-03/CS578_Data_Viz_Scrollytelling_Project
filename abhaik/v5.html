@@ -1,0 +1,157 @@
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<section id="viz-roadmap" style="padding:40px 0;">
+  <h2>Carbon Roadmap: EV vs ICE Along the Journey</h2>
+  <p>The road represents distance; the curves show cumulative CO₂ for EV and ICE.</p>
+  <svg id="roadmap-chart" width="800" height="450"></svg>
+</section>
+<script>
+function initCarbonRoadmapChart() {
+  const svg = d3.select("#roadmap-chart");
+  const width = +svg.attr("width");
+  const height = +svg.attr("height");
+  const margin = { top: 40, right: 40, bottom: 50, left: 70 };
+  const innerWidth = width - margin.left - margin.right;
+  const innerHeight = height - margin.top - margin.bottom;
+
+  const g = svg.append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  const distances = d3.range(0, 200001, 5000);
+  const iceSlope = 0.00018;
+  const evSlope = 0.00009;
+  const evManuf = 20;
+  const iceManuf = 5;
+
+  const data = distances.map(d => ({
+    distance: d,
+    ev: evManuf + evSlope * d,
+    ice: iceManuf + iceSlope * d
+  }));
+
+  const x = d3.scaleLinear()
+    .domain(d3.extent(distances))
+    .range([0, innerWidth]);
+
+  const y = d3.scaleLinear()
+    .domain([d3.min(data, d => Math.min(d.ev, d.ice)) - 5, d3.max(data, d => Math.max(d.ev, d.ice)) + 5])
+    .range([innerHeight, 0]);
+
+  // "Road" – sinusoidal curve near the bottom
+  const roadYBase = innerHeight + 10;
+  const roadLine = d3.line()
+    .x(d => x(d))
+    .y(d => innerHeight - 10 + 10 * Math.sin(d / 30000));
+
+  g.append("path")
+    .datum(distances)
+    .attr("d", roadLine)
+    .attr("stroke", "#A3835F")
+    .attr("stroke-width", 12)
+    .attr("stroke-linecap", "round")
+    .attr("fill", "none")
+    .attr("opacity", 0.6);
+
+  const lineEV = d3.line()
+    .x(d => x(d.distance))
+    .y(d => y(d.ev));
+
+  const lineICE = d3.line()
+    .x(d => x(d.distance))
+    .y(d => y(d.ice));
+
+  const evPath = g.append("path")
+    .datum(data)
+    .attr("fill", "none")
+    .attr("stroke", "#1FBF74")
+    .attr("stroke-width", 2.5);
+
+  const icePath = g.append("path")
+    .datum(data)
+    .attr("fill", "none")
+    .attr("stroke", "#C0392B")
+    .attr("stroke-width", 2.5);
+
+  function animatePath(path) {
+    const length = path.node().getTotalLength();
+    path
+      .attr("stroke-dasharray", `${length} ${length}`)
+      .attr("stroke-dashoffset", length)
+      .transition()
+      .duration(1200)
+      .ease(d3.easeCubicOut)
+      .attr("stroke-dashoffset", 0);
+  }
+
+  const xAxis = d3.axisBottom(x)
+    .ticks(6)
+    .tickFormat(d => d/1000 + "k");
+  const yAxis = d3.axisLeft(y);
+
+  g.append("g")
+    .attr("transform", `translate(0,${innerHeight})`)
+    .call(xAxis);
+
+  g.append("g").call(yAxis);
+
+  g.append("text")
+    .attr("x", innerWidth / 2)
+    .attr("y", innerHeight + 40)
+    .attr("text-anchor", "middle")
+    .text("Distance driven (km)");
+
+  g.append("text")
+    .attr("x", -innerHeight / 2)
+    .attr("y", -50)
+    .attr("transform", "rotate(-90)")
+    .attr("text-anchor", "middle")
+    .text("Cumulative emissions (t CO₂)");
+
+  const legend = g.append("g")
+    .attr("transform", "translate(0,-15)");
+
+  legend.append("rect")
+    .attr("x", 0)
+    .attr("width", 12)
+    .attr("height", 12)
+    .attr("fill", "#1FBF74");
+  legend.append("text")
+    .attr("x", 18)
+    .attr("y", 10)
+    .text("EV");
+
+  legend.append("rect")
+    .attr("x", 80)
+    .attr("width", 12)
+    .attr("height", 12)
+    .attr("fill", "#C0392B");
+  legend.append("text")
+    .attr("x", 98)
+    .attr("y", 10)
+    .text("ICE");
+
+  // prepare paths
+  evPath.attr("d", lineEV);
+  icePath.attr("d", lineICE);
+
+  window._playCarbonRoadmap = () => {
+    animatePath(evPath);
+    animatePath(icePath);
+  };
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  initCarbonRoadmapChart();
+
+  const section = document.querySelector("#viz-roadmap");
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && window._playCarbonRoadmap) {
+        window._playCarbonRoadmap();
+        observer.unobserve(section);
+      }
+    });
+  }, { threshold: 0.4 });
+
+  observer.observe(section);
+});
+</script>

@@ -1,1 +1,199 @@
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<section id="viz-break-even" style="padding:40px 0;">
+  <h2>EV vs ICE Lifecycle Emissions</h2>
+  <p>Select a grid scenario to see how the break-even point shifts.</p>
+  <label for="grid-select">Grid scenario:</label>
+  <select id="grid-select"></select>
+  <svg id="break-even-chart" width="800" height="450"></svg>
+</section>
+<script>
+function initBreakEvenChart() {
+  const svg = d3.select("#break-even-chart");
+  const width = +svg.attr("width");
+  const height = +svg.attr("height");
+  const margin = { top: 40, right: 40, bottom: 50, left: 70 };
+  const innerWidth = width - margin.left - margin.right;
+  const innerHeight = height - margin.top - margin.bottom;
 
+  const g = svg.append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  // ---- Synthetic data: replace later with real LCA data ----
+  const distances = d3.range(0, 200001, 5000);
+  const scenarios = [
+    { name: "Clean grid", evSlope: 0.00007, iceSlope: 0.00018 },
+    { name: "Average grid", evSlope: 0.00010, iceSlope: 0.00018 },
+    { name: "Coal-heavy grid", evSlope: 0.00014, iceSlope: 0.00018 }
+  ];
+
+  let data = [];
+  scenarios.forEach(s => {
+    distances.forEach(d => {
+      data.push({
+        scenario: s.name,
+        distance: d,
+        ev: 20 + s.evSlope * d,
+        ice: 5 + s.iceSlope * d
+      });
+    });
+  });
+  // ----------------------------------------------------------
+
+  const scenarioNames = [...new Set(data.map(d => d.scenario))];
+
+  const x = d3.scaleLinear()
+    .domain(d3.extent(data, d => d.distance))
+    .range([0, innerWidth]);
+
+  const y = d3.scaleLinear()
+    .domain([0, d3.max(data, d => Math.max(d.ev, d.ice)) * 1.1])
+    .range([innerHeight, 0]);
+
+  const xAxis = d3.axisBottom(x)
+    .ticks(6)
+    .tickFormat(d => d / 1000 + "k");
+  const yAxis = d3.axisLeft(y);
+
+  g.append("g")
+    .attr("transform", `translate(0,${innerHeight})`)
+    .attr("class", "x-axis")
+    .call(xAxis);
+
+  g.append("g")
+    .attr("class", "y-axis")
+    .call(yAxis);
+
+  g.append("text")
+    .attr("x", innerWidth / 2)
+    .attr("y", innerHeight + 40)
+    .attr("text-anchor", "middle")
+    .text("Distance driven (km)");
+
+  g.append("text")
+    .attr("x", -innerHeight / 2)
+    .attr("y", -50)
+    .attr("transform", "rotate(-90)")
+    .attr("text-anchor", "middle")
+    .text("Cumulative emissions (t CO₂)");
+
+  const lineEV = d3.line()
+    .x(d => x(d.distance))
+    .y(d => y(d.ev));
+
+  const lineICE = d3.line()
+    .x(d => x(d.distance))
+    .y(d => y(d.ice));
+
+  const evPath = g.append("path")
+    .attr("fill", "none")
+    .attr("stroke", "#1FBF74")
+    .attr("stroke-width", 2.5);
+
+  const icePath = g.append("path")
+    .attr("fill", "none")
+    .attr("stroke", "#C0392B")
+    .attr("stroke-width", 2.5);
+
+  // Draw lines with stroke-dash animation
+  function animatePath(path) {
+    const length = path.node().getTotalLength();
+    path
+      .attr("stroke-dasharray", length + " " + length)
+      .attr("stroke-dashoffset", length)
+      .transition()
+      .duration(900)
+      .ease(d3.easeCubicOut)
+      .attr("stroke-dashoffset", 0);
+  }
+
+  const breakEvenCircle = g.append("circle")
+    .attr("r", 5)
+    .attr("fill", "black")
+    .style("display", "none");
+
+  const breakEvenText = g.append("text")
+    .attr("text-anchor", "middle")
+    .attr("dy", -10)
+    .style("font-size", "12px");
+
+  // Dropdown
+  const select = d3.select("#grid-select");
+  select.selectAll("option")
+    .data(scenarioNames)
+    .enter()
+    .append("option")
+    .attr("value", d => d)
+    .text(d => d);
+
+  select.on("change", function () {
+    updateChart(this.value, true);
+  });
+
+  // Initial render (no animation yet – will animate on observer trigger)
+  function updateChart(scenarioName, animate) {
+    const filtered = data.filter(d => d.scenario === scenarioName);
+
+    evPath.datum(filtered).attr("d", lineEV);
+    icePath.datum(filtered).attr("d", lineICE);
+
+    if (animate) {
+      animatePath(evPath);
+      animatePath(icePath);
+    }
+
+    // Find break-even: first point where EV < ICE
+    let be = null;
+    for (let i = 0; i < filtered.length; i++) {
+      if (filtered[i].ev < filtered[i].ice) {
+        be = filtered[i];
+        break;
+      }
+    }
+
+    if (be) {
+      breakEvenCircle
+        .style("display", null)
+        .transition()
+        .duration(600)
+        .attr("cx", x(be.distance))
+        .attr("cy", y(be.ev));
+
+      breakEvenText
+        .style("display", null)
+        .transition()
+        .duration(600)
+        .attr("x", x(be.distance))
+        .attr("y", y(be.ev))
+        .text(`Break-even ≈ ${(be.distance / 1000).toFixed(0)}k km`);
+    } else {
+      breakEvenCircle.style("display", "none");
+      breakEvenText.style("display", "none");
+    }
+  }
+
+  // Save updateChart for external use (scroll trigger)
+  window._updateBreakEvenChart = () => updateChart(scenarioNames[0], true);
+
+  // Initial layout (no animation)
+  updateChart(scenarioNames[0], false);
+}
+
+// Scroll trigger
+document.addEventListener("DOMContentLoaded", () => {
+  initBreakEvenChart();
+
+  const section = document.querySelector("#viz-break-even");
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        if (window._updateBreakEvenChart) {
+          window._updateBreakEvenChart();
+        }
+        observer.unobserve(section); // run once
+      }
+    });
+  }, { threshold: 0.4 });
+
+  observer.observe(section);
+});
+</script>

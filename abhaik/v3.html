@@ -1,0 +1,175 @@
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<section id="viz-mix" style="padding:40px 0;">
+  <h2>Electricity Mix and EV Climate Benefit</h2>
+  <p>As grids get cleaner, EV lifecycle CO₂ savings increase.</p>
+  <svg id="mix-ev-chart" width="900" height="450"></svg>
+</section>
+<script>
+function initMixAndEVChart() {
+  const svg = d3.select("#mix-ev-chart");
+  const width = +svg.attr("width");
+  const height = +svg.attr("height");
+  const margin = { top: 40, right: 40, bottom: 40, left: 40 };
+  const innerWidth = width - margin.left - margin.right;
+  const innerHeight = height - margin.top - margin.bottom;
+
+  const g = svg.append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  // Synthetic time-series, replace with real OWID/IEA & lifecycle results
+  const years = d3.range(2020, 2031);
+  const data = years.map(y => {
+    const t = (y - 2020) / (2030 - 2020); // 0..1
+    const coal = 40 - 30 * t;
+    const gas = 30 - 10 * t;
+    const renew = 20 + 30 * t;
+    const nuclear = 10 + 10 * t;
+    const total = coal + gas + renew + nuclear;
+    return {
+      year: y,
+      coal: coal / total * 100,
+      gas: gas / total * 100,
+      renewables: renew / total * 100,
+      nuclear: nuclear / total * 100,
+      ev_savings_pct: 30 + 50 * t  // 30 → 80 %
+    };
+  });
+
+  const radius = Math.min(innerWidth * 0.5, innerHeight) / 2;
+
+  const donutGroup = g.append("g")
+    .attr("transform", `translate(${innerWidth * 0.25}, ${innerHeight / 2})`);
+
+  const gaugeGroup = g.append("g")
+    .attr("transform", `translate(${innerWidth * 0.75}, ${innerHeight / 2})`);
+
+  const pie = d3.pie()
+    .value(d => d.value)
+    .sort(null);
+
+  const arc = d3.arc()
+    .outerRadius(radius)
+    .innerRadius(radius * 0.5);
+
+  const color = d3.scaleOrdinal()
+    .domain(["coal", "gas", "renewables", "nuclear"])
+    .range(["#E74C3C", "#E67E22", "#27AE60", "#3498DB"]);
+
+  const titleText = g.append("text")
+    .attr("x", innerWidth / 2)
+    .attr("y", -10)
+    .attr("text-anchor", "middle")
+    .style("font-size", "18px")
+    .style("font-weight", "bold");
+
+  const gaugeCircle = gaugeGroup.append("circle")
+    .attr("r", radius * 0.7)
+    .attr("fill", "#f0f0f0")
+    .attr("stroke", "#ccc");
+
+  const gaugeArc = d3.arc()
+    .innerRadius(radius * 0.5)
+    .outerRadius(radius * 0.7)
+    .startAngle(-Math.PI / 2);
+
+  const gaugePath = gaugeGroup.append("path")
+    .attr("fill", "#1FBF74");
+
+  const gaugeText = gaugeGroup.append("text")
+    .attr("text-anchor", "middle")
+    .attr("dy", "0.35em")
+    .style("font-size", "20px")
+    .style("font-weight", "bold");
+
+  gaugeGroup.append("text")
+    .attr("text-anchor", "middle")
+    .attr("dy", "2.5em")
+    .style("font-size", "12px")
+    .text("EV lifecycle CO₂ savings vs ICE");
+
+  function update(index) {
+    const d = data[index % data.length];
+
+    const entries = [
+      { key: "coal", value: d.coal },
+      { key: "gas", value: d.gas },
+      { key: "renewables", value: d.renewables },
+      { key: "nuclear", value: d.nuclear }
+    ];
+
+    titleText.text(`Electricity Mix and EV Benefit – ${d.year}`);
+
+    const arcs = donutGroup.selectAll("path")
+      .data(pie(entries), d => d.data.key);
+
+    arcs.enter()
+      .append("path")
+      .attr("fill", arcData => color(arcData.data.key))
+      .each(function(a) { this._current = a; })
+      .merge(arcs)
+      .transition()
+      .duration(800)
+      .attrTween("d", function(a) {
+        const i = d3.interpolate(this._current, a);
+        this._current = i(0);
+        return t => arc(i(t));
+      });
+
+    arcs.exit().remove();
+
+    const targetAngle = -Math.PI / 2 + (Math.PI * (d.ev_savings_pct / 100));
+
+    gaugePath
+      .transition()
+      .duration(800)
+      .attrTween("d", function() {
+        const start = this._currentAngle || -Math.PI / 2;
+        const i = d3.interpolate(start, targetAngle);
+        return t => {
+          const current = i(t);
+          this._currentAngle = current;
+          return gaugeArc.endAngle(current)();
+        };
+      });
+
+    gaugeText
+      .transition()
+      .duration(800)
+      .tween("text", function() {
+        const that = d3.select(this);
+        const start = +that.text().replace("%", "") || 0;
+        const i = d3.interpolate(start, d.ev_savings_pct);
+        return t => that.text(i(t).toFixed(0) + "%");
+      });
+  }
+
+  let idx = 0;
+  window._playMixAnimation = () => {
+    if (window._mixInterval) return;
+    update(idx);
+    window._mixInterval = setInterval(() => {
+      idx = (idx + 1) % data.length;
+      update(idx);
+    }, 1600);
+  };
+}
+
+// Scroll trigger
+document.addEventListener("DOMContentLoaded", () => {
+  initMixAndEVChart();
+
+  const section = document.querySelector("#viz-mix");
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        if (window._playMixAnimation) {
+          window._playMixAnimation();
+        }
+        observer.unobserve(section);
+      }
+    });
+  }, { threshold: 0.4 });
+
+  observer.observe(section);
+});
+</script>
