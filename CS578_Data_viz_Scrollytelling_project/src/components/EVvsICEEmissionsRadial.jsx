@@ -144,7 +144,7 @@ export default function EVvsICEEmissionsRadial() {
   return (
     <section className="ev-ice-radial">
       <header>
-        <h1>The Lifecycle Cost: EV vs ICE</h1>
+        <h1>Actual Grid Emission Costs: EV vs ICE</h1>
         <p>Use Phase Emissions Comparison (Dirty Grid Scenario)</p>
       </header>
 

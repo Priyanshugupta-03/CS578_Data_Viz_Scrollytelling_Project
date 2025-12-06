@@ -1,14 +1,13 @@
 import "./Intro.css";
+import carsImg from "../assets/cars.jpg";
 
 export default function Intro() {
   return (
     <section className="intro-section" id="intro-section">
 
       <div className="intro-columns">
-
-        {/* IMAGE anchored in column 2 */}
         <div className="intro-image">
-          IMAGE GOES HERE
+          <img className="cars" src={carsImg} alt="Cars" />
         </div>
 
         <p className="intro-p dropcap">

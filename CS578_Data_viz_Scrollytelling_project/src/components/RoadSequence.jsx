@@ -1,19 +1,19 @@
-import { useEffect } from "react";
 import "./RoadSequence.css";
 import gsap from "gsap";
+import { useEffect } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-
 import evCar from "../assets/car_ev.png";
 import iceCar from "../assets/car_ice.png";
 import ScrollCycleEmissionsChart from "./ScrollCycleEmissionsChart"
 import LifecycleCompass from "./LifecycleCompass";
 import ElectricityMixEVAdoption from "./ElectricityMixEVAdoption";
-import MiningImpactViz from "./MiningImpactViz";
+import EVMetalFootprint from "./EVMetalFootprint";
 import EVvsICEEmissionsRadial from "./EVvsICEEmissionsRadial";
 import EVAdoptionStreamgraph from "./EVAdoptionStreamgraph";
 import RangeVsEfficiencyScatter from "./RangeVsEfficiencyScatter";
 import CarbonPaybackBarChart from "./CarbonPaybackBarChart";
 import GridMultiplierGauge from "./GridMultiplierGauge";
+import PriceAccessibilityBoxPlot from "./PriceAccessibilityBoxPlot";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -199,36 +199,62 @@ export default function RoadSequence() {
             </div>
           </section>
 
-          <section className="road-panel" id="center-panel">
+          <section className="road-panel" id="ev-panel">
             <div className="panel-grid">
-              <div className="panel-left" />
+              <div className="panel-left">
+                <h3>Take my money! Or don't!</h3>
+                <p>Electric vehicles today come in a surprisingly wide range, making them accessible to far more people than just early adopters or tech enthusiasts. At one end, compact city EVs and budget-friendly hatchbacks are designed for short commutes, easy parking, and affordability—ideal for urban living. Moving up the spectrum, there are midsize sedans and crossovers that balance range, comfort, and performance, offering enough space and battery capacity for families and longer drives.</p>
+                <p>EV choices now also include SUVs, pickup trucks, and delivery vans, proving that electric power isn’t limited to small or lightweight vehicles. These models focus on towing capacity, cargo space, and durability while still delivering instant torque and quieter operation. On the premium side, luxury EVs emphasize sleek design, advanced driver assistance, and high-end interiors. Together, this range shows that EVs are no longer a single-category solution, but a flexible transportation option that fits diverse lifestyles, budgets, and driving needs.</p>
+              </div>
               <div className="panel-center" />
               <div className="panel-right">
+                <PriceAccessibilityBoxPlot />
+              </div>
+            </div>
+          </section>
+
+                    <section className="road-panel" id="ev-panel">
+            <div className="panel-grid">
+              <div className="panel-left">
+                <h3>Take my money! Or don't!</h3>
+                <p>Electric vehicles today come in a surprisingly wide range, making them accessible to far more people than just early adopters or tech enthusiasts. At one end, compact city EVs and budget-friendly hatchbacks are designed for short commutes, easy parking, and affordability—ideal for urban living. Moving up the spectrum, there are midsize sedans and crossovers that balance range, comfort, and performance, offering enough space and battery capacity for families and longer drives.</p>
+                <p>EV choices now also include SUVs, pickup trucks, and delivery vans, proving that electric power isn’t limited to small or lightweight vehicles. These models focus on towing capacity, cargo space, and durability while still delivering instant torque and quieter operation. On the premium side, luxury EVs emphasize sleek design, advanced driver assistance, and high-end interiors. Together, this range shows that EVs are no longer a single-category solution, but a flexible transportation option that fits diverse lifestyles, budgets, and driving needs.</p>
+              </div>
+              <div className="panel-center" />
+              <div className="panel-right">
+                <PriceAccessibilityBoxPlot />
+              </div>
+            </div>
+          </section>
+
+          {/* <section className="road-panel" id="center-panel">
+            <div className="panel-grid">
+              <div className="panel-left" />
                 <h3>Re-Centering the Comparison</h3>
+              <div className="panel-center" />
+              <div className="panel-right">
                 <p>
                   A fair comparison requires examining the systems beneath the
                   vehicles — electricity, fuels, infrastructure, and materials.
                 </p>
               </div>
             </div>
-          </section>
+          </section> */}
 
           <section className="road-panel" id="ice-panel">
             <div className="panel-grid">
               <div className="panel-left">
-                
+                <h3>However... There is more than meets the headlight!</h3>
               </div>
               <div className="panel-center" />
               <div className="panel-right">
-                
                 <p>
                   EVs cut local air pollution and deliver higher efficiency in
                   dense cities with cleaner grids.
                 </p>
-                <p>
-                  As electricity gets cleaner over time, each driven kilometer
-                  becomes cleaner too. EVs cut local air pollution and deliver higher efficiency in dense cities with cleaner grids. As electricity gets cleaner over time, each driven kilometer becomes cleaner too. Beyond tailpipe benefits, electric motors convert roughly 85–92% of electrical energy into motion, compared to about 20–30% for internal combustion engines, sharply reducing wasted energy (IEA, 2023). In urban areas, this translates to lower concentrations of nitrogen oxides and particulate matter—pollutants strongly linked to asthma and cardiovascular disease (WHO, 2022). As renewable energy expands within national grids, the lifecycle carbon footprint of EVs continues to fall without requiring changes to the vehicle itself (IPCC, 2023).
-                </p>
+                <p>Electric vehicles are often framed as a climate solution—and in many ways, they are—but a complete and honest conversation also means acknowledging their downsides. EVs don’t eliminate environmental impacts; they shift many of them upstream. Battery production, for example, is both energy- and resource-intensive. Mining lithium, cobalt, and nickel can damage ecosystems and strain local water supplies, particularly in places like Chile’s Atacama Desert, where lithium extraction uses thousands of liters of water per kilogram produced (USGS, 2022).</p>
+                <p>Cobalt sourcing raises additional concerns. A significant share comes from the Democratic Republic of Congo, where unsafe working conditions and child labor have been documented (Amnesty International, 2021). There are also broader lifecycle issues: EV manufacturing can produce higher upfront emissions than an ICE vehicle before the first mile is driven (IEA, 2023).</p>
+                <p>Studying these impacts doesn’t weaken the case for EVs—it strengthens it. Understanding environmental and social costs is essential to improve battery technology, regulate supply chains responsibly, and ensure the transition to electric mobility is genuinely sustainable.</p>
               </div>
             </div>
           </section>
@@ -295,31 +321,53 @@ export default function RoadSequence() {
               </div>
               <div className="panel-center" />
               <div className="panel-right">
-                <h3>Lifecycle Compass Radar Chart</h3>
+                <h3>Radial Chart for grid emissions</h3>
+                <p>When comparing electric vehicles (EVs) to internal combustion engine (ICE) cars under a dirty grid scenario, the lifecycle cost picture becomes far less favorable for EVs. While EVs are often marketed as “zero-emission,” this claim only holds when electricity comes from clean sources. In regions where power grids rely heavily on coal or natural gas, charging an EV can indirectly generate substantial emissions. Over years of use, these upstream emissions can rival—or in some cases exceed—the tailpipe emissions of efficient ICE vehicles.
+                </p>
                 <p>
+                  The lifecycle cost also extends beyond emissions. EVs carry a higher upfront environmental and economic burden due to battery production, which is energy-intensive and often powered by fossil fuels. When charging remains carbon-heavy, the operational advantage of EVs shrinks dramatically, delaying or even eliminating the breakeven point where they outperform ICE vehicles. In such contexts, EVs shift emissions from roads to power plants rather than eliminating them, raising important questions about whether electrification alone delivers meaningful benefits without simultaneous grid decarbonization.
                 </p>
               </div>
             </div>
           </section>
 
-          {/* <section className="road-panel" id="ice-panel">
+                    <section className="road-panel" id="ice-panel">
             <div className="panel-grid">
               <div className="panel-left">
-                <MiningImpactViz />
+                <EVMetalFootprint />
               </div>
               <div className="panel-center" />
               <div className="panel-right">
-                <h3>Where EVs Struggle</h3>
+                <h3>A metallic finish</h3>
+                <p>Mining the metals that power electric-vehicle batteries comes with environmental costs that are easy to overlook. For every tonne of battery metals produced—whether lithium, nickel, cobalt, or copper—significant greenhouse gases, water, and energy are consumed long before a car ever reaches the road. Greenhouse gas emissions arise mainly from diesel-powered mining equipment and energy-intensive refining processes, often relying on fossil-fuel-heavy grids. Water intensity is another major concern, especially for lithium extracted from brine.
+                </p>
                 <p>
-                  Battery production is carbon-intensive and depends on mining
-                  lithium, cobalt, and nickel with environmental trade-offs.
+                  In arid regions such as South America’s salt flats, thousands of liters of water can be withdrawn per tonne of lithium, putting pressure on fragile ecosystems and local communities. Energy intensity varies widely by metal, but metals like aluminum and nickel require especially large amounts of electricity to process. Together, these hidden upstream impacts remind us that the environmental benefits of batteries are real—but they begin only after the significant ecological footprint of mining and processing the materials that make modern electrification possible.
                 </p>
               </div>
             </div>
-          </section> */}
+          </section>
         </div>
       </section>
-      <div id="road-end-spacer" style={{ height: "60vh" }} />
+      <div id="road-end-spacer" style={{ height: "40vh" }} />
+      <section className="road-panel dheet" id="final-reveal" style={{display:"flex", flexdirection: "column"}}>
+        <div className="final-content">
+          <h2>So… what does this all mean?</h2>
+          <p>
+            It means electric vehicles are neither a silver bullet nor a failed experiment—they are a transition technology unfolding in real time. EVs shift environmental impacts away from tailpipes and toward power grids, mining sites, and supply chains, making their benefits highly dependent on how electricity is generated, how materials are sourced, and how products are designed and recycled.</p>
+            <p>These trade-offs don’t invalidate the promise of electrification; instead, they clarify where progress is still needed. Cleaner energy grids, better battery chemistries, responsible mining practices, and stronger recycling systems can dramatically reduce today’s impacts over time. Framing EVs as “good” or “bad” misses the larger point: they are part of an evolving system that improves through informed scrutiny. By honestly examining both the benefits and the costs, society gains the ability to guide innovation in more sustainable directions. Acknowledging complexity fosters smarter policy, better technology, and more constructive public dialogue—moving us beyond polarized debate and toward meaningful, long-term climate solutions.
+          </p>
+        </div>
+        <h3 className="by-by">A scrollytelling project by:</h3>
+        <div className="final-names">
+          <span id="name-1">Anushka Bhaik - abhaik</span>
+          <span id="name-2">Justine Sanchez Mora - jsanc177</span>
+          <span id="name-3">Mansi Ganga Nayak - mnayak12</span>
+          <span id="name-4">Priyanshu Gupta - pgupt184</span>
+          <span id="name-5">Sarthak Pandey - spande96</span>
+          <span id="name-6">Tarandeep Singh Plaha - tplaha</span>
+        </div>
+      </section>
     </section>
   );
 }
