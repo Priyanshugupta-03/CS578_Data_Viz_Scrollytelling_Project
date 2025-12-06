@@ -1,5 +1,6 @@
 # CS578_Data_Viz_Scrollytelling_Project
-Charging Ahead or Burning Out? 
+
+Charging Ahead or Burning Out?
 Visualizing the Environmental Trade-Offs Between EVs and ICE Vehicles
 
 This project is a scrollytelling data visualization created for the ASU CSE 578 (Data Visualization) course. It provides a comprehensive, balanced comparison of the total lifecycle environmental impact of Electric Vehicles (EVs) and Internal Combustion Engine (ICE) vehicles.
@@ -27,3 +28,5 @@ This project was developed by two subgroups to ensure a comprehensive, dual-pers
 Group A (Pro-EV Team): Focused on showcasing the long-term operational benefits and sustainability of EVs.
 
 Group B (Against-EV Team): Focused on critically analyzing the hidden costs, such as battery manufacturing and material mining.
+
+The project is present inside the "CS578_Data_viz_Scrollytelling_project" directory and can be started by running "npm run dev" from the console.
