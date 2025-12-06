@@ -213,34 +213,6 @@ export default function RoadSequence() {
             </div>
           </section>
 
-                    <section className="road-panel" id="ev-panel">
-            <div className="panel-grid">
-              <div className="panel-left">
-                <h3>Take my money! Or don't!</h3>
-                <p>Electric vehicles today come in a surprisingly wide range, making them accessible to far more people than just early adopters or tech enthusiasts. At one end, compact city EVs and budget-friendly hatchbacks are designed for short commutes, easy parking, and affordability—ideal for urban living. Moving up the spectrum, there are midsize sedans and crossovers that balance range, comfort, and performance, offering enough space and battery capacity for families and longer drives.</p>
-                <p>EV choices now also include SUVs, pickup trucks, and delivery vans, proving that electric power isn’t limited to small or lightweight vehicles. These models focus on towing capacity, cargo space, and durability while still delivering instant torque and quieter operation. On the premium side, luxury EVs emphasize sleek design, advanced driver assistance, and high-end interiors. Together, this range shows that EVs are no longer a single-category solution, but a flexible transportation option that fits diverse lifestyles, budgets, and driving needs.</p>
-              </div>
-              <div className="panel-center" />
-              <div className="panel-right">
-                <PriceAccessibilityBoxPlot />
-              </div>
-            </div>
-          </section>
-
-          {/* <section className="road-panel" id="center-panel">
-            <div className="panel-grid">
-              <div className="panel-left" />
-                <h3>Re-Centering the Comparison</h3>
-              <div className="panel-center" />
-              <div className="panel-right">
-                <p>
-                  A fair comparison requires examining the systems beneath the
-                  vehicles — electricity, fuels, infrastructure, and materials.
-                </p>
-              </div>
-            </div>
-          </section> */}
-
           <section className="road-panel" id="ice-panel">
             <div className="panel-grid">
               <div className="panel-left">
