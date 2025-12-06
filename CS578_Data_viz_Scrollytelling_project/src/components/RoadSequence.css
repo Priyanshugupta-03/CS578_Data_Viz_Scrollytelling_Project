@@ -126,34 +126,30 @@ body {
   z-index: 2;
 }
 
-/* EACH PANEL SECTION */
 .road-panel {
   min-height: 100vh;
   display: flex;
   align-items: center;
-  padding: 4rem 0;
+  padding: 5px 0;
 }
 
-/* GRID TO CREATE LEFT • CENTER • RIGHT */
 .panel-grid {
   display: grid;
-  grid-template-columns: 6fr 28vw 6fr;
-  /* matches road width alignment */
-  gap: 4rem;
+  grid-template-columns: minmax(520px, 1.4fr) 24vw minmax(520px, 1.4fr);
+  gap: 3rem;
   width: 100%;
   align-items: center;
-  padding: 0 6vw;
+  padding: 0 3vw;
 }
 
-/* LEFT + RIGHT PANELS */
 .panel-left,
 .panel-right {
-  padding: 1rem 1.5rem;
-  max-width: 750px;
+  padding: 0.5rem 0.5rem;
+  width: 100%;
+  max-width: none;
   color: white;
 }
 
-/* CENTER COLUMN IS EMPTY BUT HOLDS ROAD GAP */
 .panel-center {
   pointer-events: none;
 }

@@ -1,0 +1,107 @@
+/* Page-level base styles */
+body {
+  margin: 0;
+  background: #0f172a;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #e5e7eb;
+  line-height: 1.6;
+}
+
+/* Typography */
+h2 {
+  font-weight: 300;
+  color: #ffffff;
+  margin-bottom: 0.5em;
+}
+
+/* Story container */
+.story-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* Story section card */
+.story-section {
+  margin-bottom: 100px;
+  padding: 30px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Chapter text area */
+.step-text {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Visualization container */
+.vis-container {
+  min-height: 500px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Controls */
+.vis-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+  margin-top: 15px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  border-radius: 12px;
+}
+
+/* Tooltip */
+.tooltip {
+  position: absolute;
+  padding: 12px;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  pointer-events: none;
+  font-size: 0.9rem;
+  color: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 1000;
+}
+
+/* D3 Axis styling */
+.axis text {
+  fill: #94a3b8;
+  font-size: 12px;
+}
+
+.axis line,
+.axis path {
+  stroke: #334155;
+}
+
+/* Axis labels */
+.x-label,
+.y-label {
+  fill: #e5e7eb;
+  font-size: 14px;
+}
+
+/* Optional: SVG smoothing */
+svg {
+  overflow: visible;
+}
+
+/* Radio buttons */
+.vis-controls input[type="radio"] {
+  accent-color: #facc15;
+  cursor: pointer;
+}

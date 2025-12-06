@@ -1,10 +1,11 @@
-import { useState, useRef } from "react";
+import Intro from "./components/Intro";
+import Landing from "./components/Landing";
 import BackgroundWater from "./components/BackgroundWater";
 import OverlayGradient from "./components/OverlayGradient";
-import Landing from "./components/Landing";
-import Intro from "./components/Intro";
-import RoadSequence from "./components/RoadSequence"; // ⬅ new
+import RoadSequence from "./components/RoadSequence";
 import "./App.css";
+
+import { useState, useRef } from "react";
 
 export default function App() {
   const [started, setStarted] = useState(false);
@@ -29,10 +30,8 @@ export default function App() {
           <div ref={introRef}>
             <Intro />
           </div>
-
-          {/* New road sequence comes AFTER the intro */}
-          <RoadSequence />
         </main>
+        <RoadSequence />
       </div>
     </>
   );

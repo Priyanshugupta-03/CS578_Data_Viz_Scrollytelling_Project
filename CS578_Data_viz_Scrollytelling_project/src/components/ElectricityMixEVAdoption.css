@@ -1,0 +1,40 @@
+#viz-adoption {
+  padding: 40px 0;
+}
+
+.viz-wrapper {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+}
+
+.viz-title {
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 600;
+  opacity: 0.9;
+  margin-bottom: 14px;
+  color: #e5e7eb;
+}
+
+svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.bar {
+  transition: fill 0.2s ease;
+}
+
+.label {
+  font-size: 13px;
+  alignment-baseline: middle;
+  pointer-events: none;
+}

@@ -1,0 +1,80 @@
+body {
+  margin: 0;
+  background: #0f172a;
+  font-family: system-ui, sans-serif;
+  color: #e5e7eb;
+}
+
+/* Story section */
+.story-section {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.step-text {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.vis-container {
+  min-height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Controls */
+.vis-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 15px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  border-radius: 12px;
+}
+
+button {
+  background: #1e293b;
+  color: #ffffff;
+  border: 1px solid #3b82f6;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Gauge text */
+.gauge-label {
+  fill: #e5e7eb;
+  font-size: 14px;
+  text-anchor: middle;
+  font-weight: bold;
+}
+
+.gauge-percent {
+  fill: #fde047;
+  font-size: 48px;
+  font-weight: bold;
+  text-anchor: middle;
+}
+
+.gauge-description {
+  fill: #a78bfa;
+  font-size: 16px;
+  text-anchor: middle;
+}
+
+.needle-cross {
+  fill: #4ade80;
+}
+
+.zone-tick {
+  fill: #a78bfa;
+}

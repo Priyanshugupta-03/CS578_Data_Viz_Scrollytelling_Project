@@ -1,0 +1,109 @@
+/* Base background + typography (matches Vis 1) */
+body {
+  margin: 0;
+  background: #0f172a;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #e5e7eb;
+  line-height: 1.6;
+}
+
+/* Story card */
+.story-section {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Text block above visualization */
+.step-text {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.step-text h2 {
+  margin-bottom: 6px;
+}
+
+.step-text p {
+  color: #cbd5f5;
+}
+
+/* Visualization container */
+.vis-container {
+  min-height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* Controls panel */
+.vis-controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-top: 15px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+}
+
+/* Slider aesthetic */
+.vis-controls input[type="range"] {
+  accent-color: #a78bfa;
+  cursor: pointer;
+}
+
+/* Tooltip */
+.tooltip {
+  position: absolute;
+  padding: 12px;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  pointer-events: none;
+  font-size: 0.9rem;
+  color: #ffffff;
+  opacity: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Axis styling */
+.axis text {
+  fill: #94a3b8;
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.axis line,
+.axis path {
+  stroke: #475569;
+  opacity: 0.5;
+}
+
+/* Gridlines */
+.grid path {
+  display: none;
+}
+
+/* Axis labels */
+.x-label,
+.y-label {
+  fill: #e5e7eb;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* SVG safety */
+svg {
+  overflow: visible;
+}

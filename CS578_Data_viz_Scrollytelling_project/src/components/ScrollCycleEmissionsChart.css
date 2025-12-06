@@ -1,0 +1,53 @@
+.chart-block {
+  width: 100%;
+  max-width: 900px;
+  padding: 24px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.55);
+}
+
+.chart-label {
+  text-align: center;
+  font-size: 1.05rem;
+  opacity: 0.95;
+  margin-bottom: 10px;
+}
+
+.chart-legend {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 12px;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-color {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+}
+
+.legend-ev {
+  background: #4ade80;
+}
+
+.legend-ice {
+  background: #f87171;
+}
+
+svg {
+  width: 100%;
+  height: 450px;
+  display: block;
+}

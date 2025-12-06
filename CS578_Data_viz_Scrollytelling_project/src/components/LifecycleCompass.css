@@ -1,0 +1,61 @@
+.viz-compass {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 0;
+}
+
+.compass-card {
+  max-width: 640px;
+  width: 100%;
+  padding: 24px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.45);
+  text-align: center;
+}
+
+.compass-title {
+  font-size: 1.15rem;
+  margin-bottom: 16px;
+  opacity: 0.9;
+  color: #e5e7eb;
+}
+
+.compass-chart {
+  width: 100%;
+  height: auto;
+  max-height: 520px;
+}
+
+.compass-legend {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 16px;
+  font-size: 0.9rem;
+  color: #ddd;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-color {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+}
+
+.legend-ev {
+  background: #1fbf74;
+}
+
+.legend-ice {
+  background: #c0392b;
+}
