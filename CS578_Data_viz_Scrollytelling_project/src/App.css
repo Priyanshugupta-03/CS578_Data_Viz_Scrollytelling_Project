@@ -1,0 +1,12 @@
+.app-shell {
+  position: relative;
+  min-height: 100vh;
+  padding: 40px 0;
+  z-index: 1;
+  /* above the water canvas */
+}
+
+.central-shell {
+  width: min(1060px, 100% - 3rem);
+  margin: 0 auto;
+}
