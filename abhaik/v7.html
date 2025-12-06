@@ -40,12 +40,46 @@
     height: 500px;
     display: block;
   }
+
+  .compass-legend {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 16px;
+    font-size: 0.9rem;
+    color: #ddd;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .legend-color {
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    display: inline-block;
+  }
+
+  .legend-ev {
+    background: #1FBF74;
+  }
+
+  .legend-ice {
+    background: #C0392B;
+  }
 </style>
 
 <section id="viz-compass">
   <div class="compass-card">
     <div class="compass-title">Lifecycle Compass: EV vs ICE</div>
     <svg id="compass-chart" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet"></svg>
+    <div class="compass-legend">
+      <div class="legend-item"><span class="legend-color legend-ev"></span> EV</div>
+      <div class="legend-item"><span class="legend-color legend-ice"></span> ICE</div>
+    </div>
   </div>
 </section>
 
@@ -69,7 +103,6 @@ function initLifecycleCompass() {
     .domain([0, 10])
     .range([0, radius]);
 
-  // grid rings
   [2, 4, 6, 8, 10].forEach(level => {
     g.append("circle")
       .attr("r", rScale(level))
@@ -78,7 +111,6 @@ function initLifecycleCompass() {
       .attr("opacity", 0.2);
   });
 
-  // axis lines + labels
   const axis = g.selectAll(".axis")
     .data(factors)
     .enter().append("g");
@@ -129,11 +161,11 @@ function initLifecycleCompass() {
     evPath.transition().duration(1000).attr("d", radarPath(evScores));
     icePath.transition().duration(1000).attr("d", radarPath(iceScores));
 
-    setTimeout(() => pulse(evPath, evScores, "#1FBF74"), 1500);
-    setTimeout(() => pulse(icePath, iceScores, "#C0392B"), 1800);
+    setTimeout(() => pulse(evPath, evScores), 1500);
+    setTimeout(() => pulse(icePath, iceScores), 1800);
   }
 
-  function pulse(path, baseScores, color) {
+  function pulse(path, baseScores) {
     const scale = 1.05;
     const alt = baseScores.map(v => v * scale);
 
